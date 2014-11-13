@@ -8,11 +8,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.AbstractAction;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 
 import org.geotools.data.FileDataStore;
@@ -77,59 +79,77 @@ public class SaveMapAsImage {
 
 	}
 
-
-
 	public void drawMapToImage(File outputFile, String outputType) {
 
 		// Initialise a renderer
 		JMapPane mapPane = frame.getMapPane();
 		GTRenderer renderer = mapPane.getRenderer();
 
-		Rectangle rectangle = new Rectangle(frame.getWidth(), frame.getHeight());
-
+		Rectangle bounds = mapPane.getBounds();
+		//make a new rectangle otherwise our map will be offset by the width of the toolbar
+		Rectangle rectangle = new Rectangle((int)(bounds.getWidth()), ((int)bounds.getHeight()));
 		BufferedImage bufferedImage;
-		bufferedImage = new BufferedImage(rectangle.width, rectangle.height,
-				BufferedImage.TYPE_INT_ARGB);
+		if (outputType.equalsIgnoreCase("jpg")
+				|| outputType.equalsIgnoreCase("jpeg")) {
+			bufferedImage = new BufferedImage(rectangle.width,
+					rectangle.height, BufferedImage.TYPE_INT_RGB);
+		} else {
+			bufferedImage = new BufferedImage(rectangle.width,
+					rectangle.height, BufferedImage.TYPE_INT_ARGB);
+		}
 		Graphics2D graphics2D = bufferedImage.createGraphics();
-		
+
 		// Set white background
 
 		graphics2D.setBackground(Color.white);
 		graphics2D.fillRect(0, 0, rectangle.width, rectangle.height);
 
 		renderer.paint(graphics2D, rectangle, mapPane.getDisplayArea());
-		
+
 		ImageOutputStream outputImageFile = null;
-		try {	
-			outputImageFile = ImageIO.createImageOutputStream(new FileOutputStream(outputFile));
+		try {
+			outputImageFile = ImageIO
+					.createImageOutputStream(new FileOutputStream(outputFile));
 			ImageIO.write(bufferedImage, outputType, outputImageFile);
 		} catch (IOException ex) {
 
 		} finally {
-
 			graphics2D.dispose();
 			try {
-				outputImageFile.close();
+				if (outputImageFile != null) {
+					outputImageFile.flush();
+					outputImageFile.close();
+				}
 			} catch (IOException e) {
 				// don't care now
 			}
 		}
 	}
+
 	JDialog dialog = new JDialog(frame);
+
 	private class SaveAction extends AbstractAction {
 		/**
-		 * Private SaveAction 
+		 * Private SaveAction
 		 */
 		private static final long serialVersionUID = 3071568727121984649L;
 
 		public SaveAction(String text) {
 			super(text);
 		}
+
 		public void actionPerformed(ActionEvent arg0) {
-			/*dialog.setModal(true);
-			dialog.setLocationRelativeTo(frame);
-			dialog.setVisible(true);*/
-			drawMapToImage(new File("ian.png"),"png");
+			String[] writers = ImageIO.getWriterFormatNames();
+
+			String format = (String) JOptionPane.showInputDialog(frame,
+					"Choose output format:", "Customized Dialog",
+					JOptionPane.PLAIN_MESSAGE, null, writers, "png");
+
+			/*
+			 * dialog.setModal(true); dialog.setLocationRelativeTo(frame);
+			 * dialog.setVisible(true);
+			 */
+			drawMapToImage(new File("ian." + format), format);
 
 		}
 
