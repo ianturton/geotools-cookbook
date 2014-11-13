@@ -5,12 +5,14 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.AbstractAction;
 import javax.swing.JDialog;
@@ -83,11 +85,12 @@ public class SaveMapAsImage {
 
 		// Initialise a renderer
 		JMapPane mapPane = frame.getMapPane();
-		GTRenderer renderer = mapPane.getRenderer();
+		/*GTRenderer renderer = mapPane.getRenderer();
 
 		Rectangle bounds = mapPane.getBounds();
 		//make a new rectangle otherwise our map will be offset by the width of the toolbar
 		Rectangle rectangle = new Rectangle((int)(bounds.getWidth()), ((int)bounds.getHeight()));
+		
 		BufferedImage bufferedImage;
 		if (outputType.equalsIgnoreCase("jpg")
 				|| outputType.equalsIgnoreCase("jpeg")) {
@@ -105,20 +108,25 @@ public class SaveMapAsImage {
 		graphics2D.fillRect(0, 0, rectangle.width, rectangle.height);
 
 		renderer.paint(graphics2D, rectangle, mapPane.getDisplayArea());
-
+*/
 		ImageOutputStream outputImageFile = null;
+		FileOutputStream fileOutputStream = null;
 		try {
+		    fileOutputStream = new FileOutputStream(outputFile);
 			outputImageFile = ImageIO
-					.createImageOutputStream(new FileOutputStream(outputFile));
-			ImageIO.write(bufferedImage, outputType, outputImageFile);
+					.createImageOutputStream(fileOutputStream);
+			RenderedImage bufferedImage = mapPane.getBaseImage();
+			ImageIO.write(bufferedImage , outputType, outputImageFile);
 		} catch (IOException ex) {
 
 		} finally {
-			graphics2D.dispose();
+			//graphics2D.dispose();
 			try {
 				if (outputImageFile != null) {
 					outputImageFile.flush();
 					outputImageFile.close();
+					fileOutputStream.flush();
+					fileOutputStream.close();
 				}
 			} catch (IOException e) {
 				// don't care now
@@ -126,7 +134,7 @@ public class SaveMapAsImage {
 		}
 	}
 
-	JDialog dialog = new JDialog(frame);
+	//JDialog dialog = new JDialog(frame);
 
 	private class SaveAction extends AbstractAction {
 		/**
