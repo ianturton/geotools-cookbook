@@ -11,16 +11,20 @@
 \usepackage{tocbibind}
 \usepackage{microtype}
 \usepackage{cleveref}
-
+\usepackage[comma,authoryear]{natbib}
 
 \include{preamble}
 \include{introduction}
-
+\include{input}
 \include{output}
+\include{filters}
+\include{styling}
+\include{projections}
 \include{distance}
 \todo{add the rest of the chapters as includes}
 \chapter{Going Further}
-
+\bibliographystyle{plainnat}
+\bibliography{refs}
 \todo{remove this list when finished}
 \listoftodos 
 \end{document}
