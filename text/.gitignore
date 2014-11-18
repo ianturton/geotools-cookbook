@@ -1,0 +1,11 @@
+*.aux
+*.bak
+*.pyg
+*.pdf
+*.bbl
+*.blg
+*.lol
+*.tdo
+*.toc
+*.log
+*.gz
