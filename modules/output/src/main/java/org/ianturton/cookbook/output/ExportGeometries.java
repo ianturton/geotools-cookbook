@@ -14,17 +14,17 @@ public class ExportGeometries {
 		GeometryFactory fac = new GeometryFactory();
 		Point p = fac.createPoint(new Coordinate(10.1, 22.2));
 		System.out.println(getWKT(p));
-		System.out.println(getCoordinates(p));
+		// System.out.println(getCoordinates(p));
 		Coordinate[] coordinates = { new Coordinate(1, 1), new Coordinate(2, 3),
 				new Coordinate(4.4, 5.2) };
 		LineString line = fac.createLineString(coordinates);
 		System.out.println(getWKT(line));
-		System.out.println(getCoordinates(line));
+		// System.out.println(getCoordinates(line));
 		Coordinate[] pcoordinates = { new Coordinate(1, 1), new Coordinate(2, 3),
 				new Coordinate(4.4, 5.2), new Coordinate(1, 1) };
 		Polygon poly = fac.createPolygon(pcoordinates);
 		System.out.println(getWKT(poly));
-		System.out.println(getCoordinates(poly));
+		// System.out.println(getCoordinates(poly));
 		Coordinate[] pcoordinates2 = { new Coordinate(10, 10),
 				new Coordinate(20, 30), new Coordinate(40.4, 50.2),
 				new Coordinate(10, 10) };
@@ -32,7 +32,7 @@ public class ExportGeometries {
 		MultiPolygon multiPoly = fac
 				.createMultiPolygon(new Polygon[] { poly, poly2 });
 		System.out.println(getWKT(multiPoly));
-		System.out.println(getCoordinates(multiPoly));
+		// System.out.println(getCoordinates(multiPoly));
 	}
 
 	static String getWKT(Geometry geom) {

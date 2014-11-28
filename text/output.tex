@@ -5,6 +5,28 @@
 Once you have your data set up the way you would like you will want 
 to export it in some sort of form that allows you to use it.
 
+\section{Working with Geometries}\label{geoms}
+\todo{decide where this should go}
+Within GeoTools geometries are represented by JTS Geometries that contain the actual positions as Coordinates.
+Sometimes when exporting geometries you would like to produce a plain text string that represents the geometry, if for no other reason than it's easier to see what is happening than starting up a debugger. 
+This sort of interoperability issue comes up often enough that there is a standard way of doing it (well two in fact). This is known as \textbf{W}ell \textbf{K}nown \textbf{T}ext or just WKT.
+
+\lstinputlisting[firstline=38,firstnumber=38,lastline=40,label=wkt,caption={Exporting WKT from a geometry}]{../modules/output/src/main/java/org/ianturton/cookbook/output/ExportGeometries.java}
+
+\Cref{wkt} shows just how simple this process is. This will produce output like \cref{wktoutput}. WKT is kept deliberately simple so that writing a program that can read it in or write it out is easy. The standard was originally written by the OGC as part of Simple Feature specification, it is now defined in the ISO 13249 ``Information technology -- Database languages -- SQL multimedia and application packages -- Part 3: Spatial'' standard.
+
+\begin{figure}[h]
+\begin{spverbatim}
+POINT (10.1 22.2) 
+LINESTRING (1 1, 2 3, 4.4 5.2)
+POLYGON ((1 1, 2 3, 4.4 5.2, 1 1))
+MULTIPOLYGON (((1 1, 2 3, 4.4 5.2, 1 1)), ((10 10, 20 30, 40.4 50.2, 10 10)))
+\end{spverbatim}
+\caption{Some examples of WKT}\label{wktoutput}
+\end{figure}
+
+One important point to notice is that \spverb!POLYGON! has two parenthesis at the start and end, this allows you to specify holes in your polygon (think islands in a lake) which are represented like \spverb!POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))!. 
+
 \section{Creating an Image of the Map}
 Assuming that you have created a map that you like with the correct styling and area of interest 
 set then you might want to produce a picture of it. \Cref{save} shows how to do this.
