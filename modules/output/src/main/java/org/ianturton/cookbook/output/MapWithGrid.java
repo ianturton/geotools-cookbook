@@ -5,6 +5,8 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
@@ -20,11 +22,18 @@ import org.geotools.grid.Grids;
 import org.geotools.map.FeatureLayer;
 import org.geotools.map.Layer;
 import org.geotools.map.MapContent;
+import org.geotools.map.MapViewport;
+import org.geotools.map.event.MapBoundsEvent;
+import org.geotools.map.event.MapBoundsListener;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.styling.SLD;
 import org.geotools.styling.Style;
 import org.geotools.swing.JMapFrame;
 import org.geotools.swing.JMapPane;
 import org.geotools.swing.data.JFileDataStoreChooser;
+import org.opengis.metadata.extent.Extent;
+import org.opengis.metadata.extent.GeographicBoundingBox;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
  * draw a map with graticules
@@ -32,10 +41,13 @@ import org.geotools.swing.data.JFileDataStoreChooser;
  * @author ian.turton
  *
  */
-public class MapWithGrid {
+public class MapWithGrid implements MapBoundsListener {
 
 	private JMapFrame frame;
 	private MapContent mapContent;
+	private FeatureLayer layer;
+	private Layer gridLayer;
+	private Style style;
 
 	public static void main(String[] args) throws IOException {
 		File file = null;
@@ -63,20 +75,45 @@ public class MapWithGrid {
 		// Create a map content and add our shapefile to it
 		mapContent = new MapContent();
 		mapContent.setTitle("GeoTools Mapping");
-		Style style = SLD.createSimpleStyle(featureSource.getSchema());
-		Layer layer = new FeatureLayer(featureSource, style);
+		style = SLD.createSimpleStyle(featureSource.getSchema());
+		layer = new FeatureLayer(featureSource, style);
 
+		ReferencedEnvelope gridBounds = layer.getBounds();
+		gridLayer = createGridLayer(style, gridBounds);
+		mapContent.addLayer(layer);
+		mapContent.addLayer(gridLayer);
+		mapContent.addMapBoundsListener(this);
+		frame = new JMapFrame(mapContent);
+		frame.enableStatusBar(true);
+
+		frame.enableToolBar(true);
+		JToolBar toolBar = frame.getToolBar();
+		toolBar.addSeparator();
+		SaveAction save = new SaveAction("Save");
+		toolBar.add(save);
+		frame.initComponents();
+		frame.setSize(1000, 500);
+		frame.setVisible(true);
+	}
+
+	private Layer createGridLayer(Style style, ReferencedEnvelope gridBounds)
+			throws IOException {
 		double squareWidth = 20.0;
+		double extent = gridBounds.maxExtent();
+		double ll = Math.log10(extent);
+		if (ll > 0) {
+			// there are ll 10's across the map
+			while (ll-- > 4) {
+				squareWidth *= 10;
+			}
+		}
 
 		// max distance between vertices
 		double vertexSpacing = squareWidth / 20;
-
-		ReferencedEnvelope gridBounds = layer.getBounds();
 		// grow to cover the whole map (and a bit).
 		double left = gridBounds.getMinX();
 		double bottom = gridBounds.getMinY();
-		System.out.println(left + "," + bottom);
-		System.out.println("deltaX = " + (left % squareWidth));
+
 		if (left % squareWidth != 0) {
 			if (left > 0.0) { // east
 				left -= Math.abs(left % squareWidth);
@@ -84,7 +121,7 @@ public class MapWithGrid {
 				left += Math.abs(left % squareWidth);
 			}
 		}
-		System.out.println("deltaY = " + (bottom % squareWidth));
+
 		if (bottom % squareWidth != 0) {
 			if (bottom > 0.0) {
 				bottom -= Math.abs(bottom % squareWidth);
@@ -92,13 +129,10 @@ public class MapWithGrid {
 				bottom += Math.abs(bottom % squareWidth);
 			}
 		}
-		System.out.println(left + "," + bottom);
+
 		gridBounds.expandToInclude(left, bottom);
 		double right = gridBounds.getMaxX();
 		double top = gridBounds.getMaxY();
-		System.out.println("deltaX = " + (right % squareWidth));
-		System.out.println("deltaY = " + (top % squareWidth));
-		System.out.println(right + "," + top);
 		if (right % squareWidth != 0) {
 			if (right > 0.0) { // east
 				right += Math.abs(right % squareWidth) + squareWidth;
@@ -114,24 +148,12 @@ public class MapWithGrid {
 				top -= Math.abs(top % squareWidth) - squareWidth;
 			}
 		}
-		System.out.println(right + "," + top);
+
 		gridBounds.expandToInclude(right, top);
 		SimpleFeatureSource grid = Grids.createSquareGrid(gridBounds, squareWidth,
 				vertexSpacing);
 		Layer gridLayer = new FeatureLayer(grid.getFeatures(), style);
-		mapContent.addLayer(layer);
-		mapContent.addLayer(gridLayer);
-		frame = new JMapFrame(mapContent);
-		frame.enableStatusBar(true);
-
-		frame.enableToolBar(true);
-		JToolBar toolBar = frame.getToolBar();
-		toolBar.addSeparator();
-		SaveAction save = new SaveAction("Save");
-		toolBar.add(save);
-		frame.initComponents();
-		frame.setSize(1000, 500);
-		frame.setVisible(true);
+		return gridLayer;
 	}
 
 	public void drawMapToImage(File outputFile, String outputType) {
@@ -175,6 +197,42 @@ public class MapWithGrid {
 					"Choose output format:", "Customized Dialog",
 					JOptionPane.PLAIN_MESSAGE, null, writers, "png");
 			drawMapToImage(new File("ian." + format), format);
+
+		}
+
+	}
+
+	public void mapBoundsChanged(MapBoundsEvent event) {
+		// this fires on a CRS change as well as a PAN/ZOOM
+		if (event.getEventType().contains(MapBoundsEvent.Type.CRS)) {
+			CoordinateReferenceSystem crs = event.getNewCoordinateReferenceSystem();
+			Extent bounds = crs.getDomainOfValidity();
+
+			if (bounds == null) {
+				return;
+			}
+			@SuppressWarnings("unchecked")
+			ArrayList<? extends GeographicBoundingBox> ex = new ArrayList<GeographicBoundingBox>(
+					(Collection<? extends GeographicBoundingBox>) bounds
+							.getGeographicElements());
+			GeographicBoundingBox box = ex.get(0);
+			ReferencedEnvelope env = new ReferencedEnvelope(
+					DefaultGeographicCRS.WGS84);
+			env.expandToInclude(box.getWestBoundLongitude(),
+					box.getSouthBoundLatitude());
+			env.expandToInclude(box.getEastBoundLongitude(),
+					box.getNorthBoundLatitude());
+			System.out.println(env);
+
+			MapViewport viewport = frame.getMapPane().getMapContent().getViewport();
+
+			viewport.setBounds(env);
+			// mapContent.removeLayer(gridLayer);
+			/*
+			 * try { gridLayer = createGridLayer(style, res); } catch (IOException e)
+			 * { // TODO Auto-generated catch block e.printStackTrace(); return; }
+			 * mapContent.addLayer(gridLayer);
+			 */
 
 		}
 
