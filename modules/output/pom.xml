@@ -1,13 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>output</artifactId>
-  <name>Generate Images</name>
-  <parent>
-  	<groupId>org.ianturton.cookbook</groupId>
-  	<artifactId>modules</artifactId>
-  	<version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <!-- =========================================================== -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>output</artifactId>
+	<name>Generate Images</name>
+	<parent>
+		<groupId>org.ianturton.cookbook</groupId>
+		<artifactId>modules</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<!-- =========================================================== -->
 	<!-- Dependency Management -->
 	<!-- =========================================================== -->
 	<dependencies>
@@ -31,19 +32,23 @@
 			<artifactId>gt-shapefile</artifactId>
 			<version>${geotools.version}</version>
 		</dependency>
-				<dependency>
+		<dependency>
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-epsg-hsql</artifactId>
 			<version>${geotools.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-swing</artifactId>
 			<version>${geotools.version}</version>
 		</dependency>
-		
-		
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-grid</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -82,7 +87,7 @@
 			<version>1.7</version>
 		</dependency>
 	</dependencies>
-  
+
 	<groupId>org.ianturton.cookbook</groupId>
 	<version>0.0.1-SNAPSHOT</version>
 </project>

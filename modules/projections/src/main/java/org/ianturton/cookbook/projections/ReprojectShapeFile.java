@@ -60,7 +60,8 @@ public class ReprojectShapeFile {
 				.reproject(inFeatures, crs);
 		outStore.createSchema(outFeatures.getSchema());
 		Transaction transaction = new DefaultTransaction("create");
-		SimpleFeatureSource featureSource = outStore.getFeatureSource("ian");
+		String outName = outStore.getNames().get(0).getLocalPart();
+		SimpleFeatureSource featureSource = outStore.getFeatureSource(outName);
 		FeatureStore featureStore = (FeatureStore) featureSource;
 		featureStore.setTransaction(transaction);
 		featureStore.addFeatures(outFeatures);
