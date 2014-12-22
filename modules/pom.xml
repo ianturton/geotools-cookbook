@@ -89,5 +89,6 @@
 	<modules>
 		<module>output</module>
 		<module>quickstart</module>
+		<module>filters</module>
 	</modules>
 </project>

@@ -5,8 +5,6 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
@@ -22,7 +20,6 @@ import org.geotools.grid.Grids;
 import org.geotools.map.FeatureLayer;
 import org.geotools.map.Layer;
 import org.geotools.map.MapContent;
-import org.geotools.map.MapViewport;
 import org.geotools.map.event.MapBoundsEvent;
 import org.geotools.map.event.MapBoundsListener;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -33,7 +30,10 @@ import org.geotools.swing.JMapPane;
 import org.geotools.swing.data.JFileDataStoreChooser;
 import org.opengis.metadata.extent.Extent;
 import org.opengis.metadata.extent.GeographicBoundingBox;
+import org.opengis.metadata.extent.GeographicExtent;
+import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.TransformException;
 
 /**
  * draw a map with graticules
@@ -206,27 +206,42 @@ public class MapWithGrid implements MapBoundsListener {
 		// this fires on a CRS change as well as a PAN/ZOOM
 		if (event.getEventType().contains(MapBoundsEvent.Type.CRS)) {
 			CoordinateReferenceSystem crs = event.getNewCoordinateReferenceSystem();
+			ReferencedEnvelope oldAoI = event.getOldAreaOfInterest();
+			ReferencedEnvelope newAoI = event.getNewAreaOfInterest();
+			System.out.println("going from " + oldAoI + "\nto " + newAoI
+					+ "\nfor CRS " + crs);
 			Extent bounds = crs.getDomainOfValidity();
 
 			if (bounds == null) {
 				return;
 			}
-			@SuppressWarnings("unchecked")
-			ArrayList<? extends GeographicBoundingBox> ex = new ArrayList<GeographicBoundingBox>(
-					(Collection<? extends GeographicBoundingBox>) bounds
-							.getGeographicElements());
-			GeographicBoundingBox box = ex.get(0);
-			ReferencedEnvelope env = new ReferencedEnvelope(
-					DefaultGeographicCRS.WGS84);
-			env.expandToInclude(box.getWestBoundLongitude(),
-					box.getSouthBoundLatitude());
-			env.expandToInclude(box.getEastBoundLongitude(),
-					box.getNorthBoundLatitude());
-			System.out.println(env);
 
-			MapViewport viewport = frame.getMapPane().getMapContent().getViewport();
+			Extent crsExtent = crs.getDomainOfValidity();
+			for (GeographicExtent element : crsExtent.getGeographicElements()) {
+				if (element instanceof GeographicBoundingBox) {
+					GeographicBoundingBox env = (GeographicBoundingBox) element;
+					ReferencedEnvelope bbox = new ReferencedEnvelope(
+							env.getWestBoundLongitude(), env.getEastBoundLongitude(),
+							env.getSouthBoundLatitude(), env.getNorthBoundLatitude(),
 
-			viewport.setBounds(env);
+							DefaultGeographicCRS.WGS84);
+					ReferencedEnvelope envelope = null;
+					try {
+						envelope = bbox.transform(crs, true);
+					} catch (TransformException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (FactoryException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println(envelope);
+
+					frame.getMapPane().getMapContent().getViewport().setBounds(envelope);
+
+				}
+			}
+
 			// mapContent.removeLayer(gridLayer);
 			/*
 			 * try { gridLayer = createGridLayer(style, res); } catch (IOException e)

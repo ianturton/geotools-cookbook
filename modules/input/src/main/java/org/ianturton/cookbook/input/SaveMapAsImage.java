@@ -25,6 +25,7 @@ import org.geotools.map.FeatureLayer;
 import org.geotools.map.GridReaderLayer;
 import org.geotools.map.Layer;
 import org.geotools.map.MapContent;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.styling.ChannelSelection;
 import org.geotools.styling.ContrastEnhancement;
 import org.geotools.styling.RasterSymbolizer;
@@ -92,6 +93,8 @@ public class SaveMapAsImage {
 		Style style = SLD.createSimpleStyle(featureSource.getSchema());
 		Layer layer = new FeatureLayer(featureSource, style);
 		mapContent.addLayer(layer);
+		mapContent.getViewport().setCoordinateReferenceSystem(
+				DefaultGeographicCRS.WGS84);
 		frame = new JMapFrame(mapContent);
 		frame.enableStatusBar(true);
 		frame.enableToolBar(true);
@@ -201,7 +204,7 @@ public class SaveMapAsImage {
 
 		// Now we create a RasterSymbolizer using the selected channels
 		SelectedChannelType[] sct = new SelectedChannelType[cov
-				.getNumSampleDimensions()];
+		                                                    .getNumSampleDimensions()];
 		ContrastEnhancement ce = sf.contrastEnhancement(ff.literal(1.0),
 				ContrastMethod.NORMALIZE);
 		for (int i = 0; i < 3; i++) {
