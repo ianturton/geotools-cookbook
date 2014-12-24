@@ -1,14 +1,29 @@
-\chapter*{Preface}
-\section*{About this book}
-This book is a gentle introduction to the GeoTools library. It is aimed at developers who have a geographic problem that they want to solve in Java. 
+\chapter{Preface}
+\section{About this book}
+This book is a gentle introduction to the \GeoTools library. It is aimed at developers who have a geographic problem that they want to solve in Java. 
 
-\section*{Who is this book for?}
+\section{About the author}
+I'm a programmer and while waiting for my code to compile I hang out on the \href{http://gis.stackexchange.com/}{GIS StackExchange site} answering questions as \texttt{iant}. Over the past 4 years I've answered more than 600 questions, adding this experience to the issues I helped students with when I worked at Leeds University and Pennsylvania State University, I think I've got a pretty good idea of where people go wrong when starting out with geography and geographic programs. The aim of this book is to distil some of my knowledge in to a form I can point people to, which should save me some typing in the future. 
+
+However as XKCD points out in \cref{xkcd-duty} it's unlikely to solve all my problems. 
+
+
+\begin{figure}[htbp]
+{\centering
+\includegraphics{images/duty_calls}
+\caption{Why we need this book?\\ \ccbync~\href{http://xkcd.com/386/}{XKCD}}
+\label{xkcd-duty}
+}
+\end{figure}
+
+\section{Who is this book for?}
 You are a Java developer who has written a number of complex programs already, you know how to set up your development environment whether it is an IDE or a command line and text editor. You are happy using Maven to manage your code (or at least willing to learn) and you have a interest in geographic problems (or your boss has). However, you are smart and you don't want to have to write a whole geographic library for yourself from scratch. You have no time or energy to look up the Shapefile white paper \citep{ESRI1997} to see how to read your data in, or work out the projection needed to make the map equal area. 
 
-So to make your life easier you've picked an existing library but now you have to learn how that works. This book will help you solve common problems using the GeoTools library.
+So to make your life easier you've picked an existing library but now you have to learn how that works. This book will help you solve common problems using the \GeoTools library.
 
-The joy of Java programming is that it doesn't matter if you use a Linux machine, a windows box or even a Mac. But beware many parts of the GeoTools library depend on the AWT and the Java Service Provider mechanism neither of which work on Android devices at the time of writing, so if you want to write Android applications you will need to find another library. That's not to say you can't take some of the code and techniques shown here on Android just that there is a fairly good chance that it will not work as is.
+The joy of Java programming is that it doesn't matter if you use a Linux machine, a windows box or even a Mac. But beware many parts of the \GeoTools library depend on the AWT and the Java Service Provider mechanism neither of which work on Android devices at the time of writing, so if you want to write Android applications you will need to find another library. That's not to say you can't take some of the code and techniques shown here on Android just that there is a fairly good chance that it will not work as is.
  
-\section*{About the author}
+\section{A brief history of \GeoTools}
+Once upon a time, when I was a newish (and keen) post--doctoral researcher in the \ac{CCG} at the University of Leeds there was a younger (and keener) Master's student call James Macgill who wanted to investigate swarms of agents moving around a map. The current state of the art \ac{GIS} system was unable to do more than draw a simple map. The ``obvious'' solution was to write our own \ac{GIS} system and so \GeoTools was born. Version 1 of the library was really intended for internal use only but news of leaked out and people (like \ac{TOPP} started to use it). Overtime a user community developed, and then they started wanting bug fixes and new features! It was terrible, as by now both of us had other jobs to do and very little spare time for \GeoTools. At the same time it was becoming apparent that there were some design choices that would make extending the library any further difficult, so we took the only sensible course of action and abandoned the project. We then replaced \GeoTools--1 with \GeoTools--2, which was redesigned to incorporate all (or at least some of) the lessons we had learned in \GeoTools--1. 
 
-\section*{A brief history of GeoTools}
+\GeoTools--2 was built on a generic feature definition, to start with it only supported \ac{OGC} Simple Features, but later when users needed complex features it was (relatively) easy to add support for them. We also switched from using Ant to Maven to manage the build and started to produce modular jar files to allow users to pick and choose the parts they wanted to use. We also recruited a bunch of new developers from \ac{TOPP} and Refractions Research who were building the GeoServer WMS Server and the UDig editor respectively. 

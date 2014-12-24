@@ -1,6 +1,8 @@
 \RequirePackage[l2tabu, orthodox]{nag}
 %\documentclass[a4paper]{tufte-book}
 \documentclass{scrbook}
+% leave this last
+\usepackage[bookmarksdepth=subsection,hidelinks]{hyperref}
 \usepackage{scrhack}
 \usepackage{todonotes}
 %\usepackage[printonlyused,withpage]{acronym}
@@ -8,12 +10,38 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{siunitx}
-\usepackage{tocbibind}
+\usepackage{caption}
+\usepackage{xspace} 
 \usepackage{microtype}
 \usepackage{cleveref}
 \usepackage[comma,authoryear]{natbib}
 \usepackage{spverbatim}
-\include{preamble}
+\usepackage{ccicons}
+
+% fix the kerning in GeoTools to look nicer (to me)
+\newcommand{\GeoTools}{Geo\kern -.15em T\kern -.15em ools\xspace}
+
+\title{\GeoTools Cookbook}
+\author{Ian Turton}
+
+% define how the listings will look
+\lstset{
+    basicstyle=\footnotesize\ttfamily,numbers=left, numberstyle=\tiny,  numbersep=5pt,
+	frame=single,
+    breaklines=true,
+    postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}
+}
+\lstset{tabsize=2}
+\lstloadlanguages{java}
+
+%and finally start the book!
+
+\begin{document}
+\maketitle
+\tableofcontents
+\lstlistoflistings 
+\clearpage
+
 \include{preface}
 \include{introduction}
 \include{input}
@@ -26,6 +54,7 @@
 \chapter{Going Further}
 \bibliographystyle{plainnat}
 \bibliography{refs2}
+% this contains the acronyms - which for some reason doesn't work at the front.
 \include{postamble}
 \todo{remove this list when finished}
 \listoftodos 
