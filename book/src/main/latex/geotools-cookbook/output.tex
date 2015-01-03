@@ -11,7 +11,7 @@ Within \GeoTools geometries are represented by \ac{JTS} Geometries that contain 
 Sometimes when exporting geometries you would like to produce a plain text string that represents the geometry, if for no other reason than it's easier to see what is happening than starting up a debugger. 
 This sort of interoperability issue comes up often enough that there is a standard way of doing it (well two in fact). The most common format is \ac{WKT}.
 
-\lstinputlisting[firstline=38,firstnumber=38,lastline=40,label=wkt,caption={Exporting WKT from a geometry}]{../modules/output/src/main/java/org/ianturton/cookbook/output/ExportGeometries.java}
+\lstinputlisting[firstline=38,firstnumber=38,lastline=40,label=wkt,caption={Exporting WKT from a geometry}]{output/src/main/java/org/ianturton/cookbook/output/ExportGeometries.java}
 
 \Cref{wkt} shows just how simple this process is. This will produce output like \cref{wktoutput}. WKT is kept deliberately simple so that writing a program that can read it in or write it out is easy. The standard was originally written by the \ac{OGC} as part of Simple Feature specification, it is now defined in the ISO 13249 ``Information technology -- Database languages -- SQL multimedia and application packages -- Part 3: Spatial'' standard.
 
@@ -32,9 +32,9 @@ One important point to notice is that \spverb!POLYGON! has two parenthesis at th
 Assuming that you have created a map that you like with the correct styling and area of interest 
 set then you might want to produce a picture of it. \Cref{save} shows how to do this.
 
-\lstinputlisting[firstline=27,firstnumber=27,label=save,caption=Save a picture of the map.]{../modules/output/src/main/java/org/ianturton/cookbook/output/SaveMapAsImage.java}
+\lstinputlisting[firstline=27,firstnumber=27,label=save,caption=Save a picture of the map.]{output/src/main/java/org/ianturton/cookbook/output/SaveMapAsImage.java}
 
 \section{Create a New Shapefile}
 
-\lstinputlisting[firstline=40,firstnumber=40,label=shapefile,caption=Save a shapefile.]{../modules/output/src/main/java/org/ianturton/cookbook/output/WriteShapefile.java}
+\lstinputlisting[firstline=40,firstnumber=40,label=shapefile,caption=Save a shapefile.]{output/src/main/java/org/ianturton/cookbook/output/WriteShapefile.java}
 
