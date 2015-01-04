@@ -9,8 +9,6 @@
 		<artifactId>modules</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>org.ianturton.cookbook</groupId>
-	<version>0.0.1-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.geotools</groupId>

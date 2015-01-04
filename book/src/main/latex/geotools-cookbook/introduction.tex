@@ -1,9 +1,19 @@
 \chapter{Introduction}\label{introduction}
 
 \section{Getting Started}
-I'm going to make the assumption that as a Java developer who already have a favourite set of development tools and are fairly happy in how to use them. To get anywhere with \GeoTools you will need to have Apache Maven installed on your machine. 
+I'm going to make the assumption that as a Java developer who already have a favourite set of development tools and are fairly happy in how to use them. 
 
-In this chapter we will draw a map. The code you will need is shown in \cref{HelloWorld}.
-\lstinputlisting[caption={Hello World GIS style},label=HelloWorld]{quickstart/src/main/java/org/geotools/tutorial/quickstart/Quickstart.java}
+\subsection{Maven}
+One of the things that often worries or confuses new users of the \GeoTools library is it's use of the Maven build system. So people will pop up on the mailing list asking why they have a missing method when trying to compile one of the tutorial programs, this is almost always because they have not installed and used maven.
+To get anywhere with \GeoTools you will need to have \href{http://maven.apache.org/}{Apache Maven} installed on your machine. Maven is an automated build management tool, once upon a time programmers used to use \texttt{make} to control how a program was built, it ``knew'' how to turn files ending in \texttt{.c} or \texttt{.f} into \texttt{.o} files and with some hints from the developer how to put those files together into an executable file. When your program consisted of 10's of files this was fine but things soon broke down. The \texttt{C} and \texttt{C++} communities started to extend this system with \texttt{autoconfig} and \texttt{cmake} to automatically build a \texttt{make} file for you. The Java community (with it's love of XML) went to \href{http://ant.apache.org/}{\texttt{ant}} which was more aware of how Java programs went together. But over time \texttt{ant} build files became hard to manage, eventually maven was born. It favours convention over configuration, or more plainly if you put your files in the right place maven will find and build them. Maven also simplifies dependency management, you simply specify the the jar that you need to add to make your program work and maven will go off, find and download not just that jar file but also the jars that it depends on. We will return to this later in this chapter but for now make sure Maven is installed on your machine. If you use Eclipse or Netbeans as your \ac{IDE} then maven is already built in, but you might want to download the standalone version anyway. 
 
+\section{Hello World}
+
+There is an \href{http://en.wikipedia.org/wiki/\%22Hello,_world!\%22_program}{unwritten law} that any programming book must include a Hello World program. This is because it is normally easy to print out a simple string which means the beginning programmer can concentrate on the form of the program rather than it's actual algorithm. Since this is a book for geographers/programmers we will start with a program that displays a map of the world (rather than a string). 
+
+A slightly trimmed version of the code you will need is shown in \cref{HelloWorld}, the full program is about 50 lines long. \todo{Add note on where to download code samples} \Cref{pom} shows the maven pom file you will need compile it, you'll notice that it is about the same length as the program itself\footnote{So may be there is some truth to what the maven haters say}. So to display a map we first need to compile the program \verb!mvn compile! -- you'll see lots of messages scroll across the screen telling you about the jar files that maven has fetched for you. If that all goes well then you can use \verb!mvn exec:java! to run the program.
+
+\lstinputlisting[firstline=29,firstnumber=29,lastline=54,caption={Hello World GIS style},label=HelloWorld]{quickstart/src/main/java/org/geotools/tutorial/quickstart/Quickstart.java}
+
+\lstinputlisting[caption={Maven Pom file}, label=pom, language=xml]{quickstart/pom.xml}
 

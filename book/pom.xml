@@ -1,68 +1,126 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.ianturton</groupId>
-    <artifactId>cookbook</artifactId>
-    <version>1.0</version>
-  </parent>
-  <groupId>com.ianturton.cookbook</groupId>
-  <artifactId>book</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <repositories>
-    <repository>
-      <id>codehaus</id>
-      <name>Maven Codehaus repository</name>
-      <url>http://repository.codehaus.org/</url>
-    </repository>
-    <repository>
-      <id>codehaus-snapshots</id>
-      <name>Maven Codehaus snapshot repository</name>
-      <url>http://snapshots.repository.codehaus.org/</url>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-    <id>maven-latex-plugin-repo</id>
-    <url>http://akquinet.github.com/maven-latex-plugin/maven2/</url>
-    <releases>
-    <enabled>true</enabled>
-</releases>
-</pluginRepository>
-																																									    </pluginRepositories>
-  <build>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.ianturton</groupId>
+		<artifactId>cookbook</artifactId>
+		<version>1.0</version>
+	</parent>
+	<groupId>com.ianturton.cookbook</groupId>
+	<artifactId>book</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<repositories>
+		<repository>
+			<id>codehaus</id>
+			<name>Maven Codehaus repository</name>
+			<url>http://repository.codehaus.org/</url>
+		</repository>
+		<repository>
+			<id>codehaus-snapshots</id>
+			<name>Maven Codehaus snapshot repository</name>
+			<url>http://snapshots.repository.codehaus.org/</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>maven-latex-plugin-repo</id>
+			<url>http://akquinet.github.com/maven-latex-plugin/maven2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+	<build>
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/latex/geotools-cookbook</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.tex</include>
+					<include>**/images/*</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>${basedir}/src/main/latex/common</directory>
+				<includes>
+					<include>**/images/*</include>
+				</includes>
+			</resource>
+		</resources>
+
 		<plugins>
-        <plugin>
-        <groupId>de.akquinet.maven</groupId>
-        <artifactId>maven-latex-plugin</artifactId>
-<version>1.1</version>
-	<executions>
-        <execution>
-        <phase>install</phase>
-        <goals>
-          <goal>latex</goal>
-        </goals>
-        </execution>
-      </executions>																																					<configuration>
-<settings>
-																																										            <!-- all tex main documents in this folder (including subfolders) will be processed -->
-																																																            <texDirectory>${basedir}/src/main/latex/geotools-cookbook</texDirectory>
-																																																						            <!-- the generated artifacts will be copied to this folder relative to ${project.reporting.outputDirectory} -->
-																																																												            <outputDirectory>.</outputDirectory> 
-																																																																		            <!-- the working directory, for temporary files and LaTeX processing relative to ${project.build.directory} -->
-																																																																								            <tempDirectory>m2latex</tempDirectory>
-																																																																														            <!-- clean up the working directory in the end? May be used for debugging -->
-																																																																																				            <cleanUp>true</cleanUp>
-																																																																																										            <!-- path to the TeX scripts, if none, it must be on the system path -->
-																																																																																																            <texPath/>
-																																																																																																						            <!-- the latex command -->
-																																																																																																												            <texCommand>pdflatex</texCommand>
-																																																																																																																		            <!-- the bibtex command -->
-																																																																																																																								            <bibtexCommand>bibtex</bibtexCommand>
-																																																																																																																														</settings>
-																																																																																																																														</configuration>
-</plugin>
-</plugins>
-  </build>
+			<plugin>
+				<groupId>de.akquinet.maven</groupId>
+				<artifactId>maven-latex-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>latex</goal>
+						</goals>
+					</execution>
+				</executions>
+
+				<configuration>
+					<settings>
+						<!-- all tex main documents in this folder (including subfolders) will 
+							be processed -->
+						<texDirectory>${basedir}/target/classes</texDirectory>
+						<!-- the generated artifacts will be copied to this folder relative 
+							to ${project.reporting.outputDirectory} -->
+						<outputDirectory>.</outputDirectory>
+						<!-- the working directory, for temporary files and LaTeX processing 
+							relative to ${project.build.directory} -->
+						<tempDirectory>m2latex</tempDirectory>
+						<!-- clean up the working directory in the end? May be used for debugging -->
+						<cleanUp>true</cleanUp>
+						<!-- path to the TeX scripts, if none, it must be on the system path -->
+						<texPath />
+						<!-- the latex command -->
+						<texCommand>pdflatex</texCommand>
+						<!-- the bibtex command -->
+						<bibtexCommand>bibtex</bibtexCommand>
+					</settings>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											de.akquinet.maven
+										</groupId>
+										<artifactId>
+											maven-latex-plugin
+										</artifactId>
+										<versionRange>
+											[1.1,)
+										</versionRange>
+										<goals>
+											<goal>latex</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
