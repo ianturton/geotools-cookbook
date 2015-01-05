@@ -100,8 +100,12 @@
     </plugins>
   </build>
 	<modules>
-		<module>output</module>
 		<module>quickstart</module>
+		<module>input</module>
+		<module>output</module>
 		<module>filters</module>
+		<module>distances</module>
+		<module>projections</module>
+		<module>styling</module>
 	</modules>
 </project>
