@@ -1,4 +1,4 @@
-package filters;
+package org.ianturton.cookbook.filters;
 
 import java.io.File;
 import java.io.IOException;
