@@ -12,6 +12,8 @@ import org.geotools.coverage.grid.io.AbstractGridCoverage2DReader;
 import org.geotools.coverage.grid.io.AbstractGridFormat;
 import org.geotools.coverage.grid.io.GridFormatFinder;
 import org.geotools.coverage.processing.OperationJAI;
+import org.geotools.coverageio.gdal.aig.AIGReader;
+import org.geotools.data.DataSourceException;
 import org.opengis.coverage.grid.GridEnvelope;
 import org.opengis.geometry.Envelope;
 import org.opengis.parameter.ParameterValueGroup;
@@ -29,10 +31,25 @@ public class QueryGrid {
 	public static void main(String[] args) {
 		// load a file
 
-		File raster = new File("../../data/TQ19.asc");
+		// File raster = new File("../../data/TQ19.asc");
+		File raster = new File("../../data/nzdem/nzdem500/hdr.adf");
 
 		AbstractGridFormat format = GridFormatFinder.findFormat(raster);
-		AbstractGridCoverage2DReader reader = format.getReader(raster);
+		AbstractGridCoverage2DReader reader = null;
+		try {
+			reader = format.getReader(raster);
+		} catch (Exception e) {
+			System.err.println("Failed to find a reader for " + raster);
+			e.printStackTrace();
+			// return;
+		}
+
+		try {
+			reader = new AIGReader(raster);
+		} catch (DataSourceException e) {
+			e.printStackTrace();
+		}
+
 		GridCoverage2D cov;
 		try {
 			cov = reader.read(null);
