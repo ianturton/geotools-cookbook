@@ -33,5 +33,10 @@
 			<artifactId>gt-swing</artifactId>
 			<version>${geotools.version}</version>
 		</dependency>
-		</dependencies>
+		<dependency>
+			<groupId>org.ianturton.cookbook</groupId>
+			<artifactId>output</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+  </dependencies>
 </project>
